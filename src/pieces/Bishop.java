@@ -1,3 +1,7 @@
+package pieces;
+
+import gameplay.GameLogic;
+
 public class Bishop extends Piece{
     public Bishop(int row, int col, String color,String name) {
         super(row, col, color,name);
@@ -20,8 +24,8 @@ public class Bishop extends Piece{
         row_index += row_increment;
 
         for (int i = 0; i < Math.abs(target_row - this.getRow());i++,row_index += row_increment, col_index += col_increment){
-            if(Main.piece_position[row_index][col_index] != null){
-                if(this.getColor().equals(Main.piece_position[row_index][col_index].getColor())){
+            if(GameLogic.piece_position[row_index][col_index] != null){
+                if(this.getColor().equals(GameLogic.piece_position[row_index][col_index].getColor())){
                     return false;
                 } else {
                     if(secondEnemyColor){

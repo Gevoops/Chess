@@ -1,9 +1,13 @@
+package pieces;
+import painter.*;
 import java.util.ArrayList;
+import gameplay.GameLogic;
+import mainPackage.Main;
 
 public abstract class Piece {
     private int row;
     private int col;
-    private String color;
+    private final String color;
     private String name;
     private int x;
     private int y;
@@ -13,23 +17,40 @@ public abstract class Piece {
         this.col = col;
         this.color = color;
         this.name = name;
-        x = col *Drawer.getTileSize()+Drawer.getOffset();
-        y = row*Drawer.getTileSize()+Drawer.getOffset();
+        x = col * Painter.getTileSize()+ Painter.getOffset();
+        y = row* Painter.getTileSize()+ Painter.getOffset();
     }
     public void move(int target_row , int target_col) {
-        if((target_col != this.getCol() || target_row != this.getRow() )&&isLegalMove(target_row,target_col)) {
-            System.out.println("moved");
-            Main.piece_position[this.getRow()][this.getCol()] = null;
-            Main.piece_position[target_row][target_col] = this;
-            this.setX(Drawer.BoardToPixelPos(target_col));
-            this.setY(Drawer.BoardToPixelPos(target_row));
-            this.setCol(target_col);
-            this.setRow(target_row);
+        if(target_col < 8 && target_col >= 0 && target_row >= 0 && target_row < 8 &&(target_col != this.getCol() || target_row != this.getRow()) &&isLegalMove(target_row,target_col)) {
+            if(this instanceof  King){
+                if(((King) this).isValidKingSideCastle(target_row,target_col)){
+                    ((Rook)GameLogic.piece_position[target_row][target_col + 1]).setMovedTrue();
+                    GameLogic.piece_position[target_row][target_col + 1].setPosition(target_row,target_col - 1);
+                } else if (((King) this).isValidQueenSideCastle(target_row,target_col)){
+                    ((Rook)GameLogic.piece_position[target_row][target_col - 2]).setMovedTrue();
+                    GameLogic.piece_position[target_row][target_col  -2].setPosition(target_row,target_col + 1);
+                }
+            }
+            this.setPosition(target_row,target_col);
+
+            GameLogic.whiteAttacks();
+            GameLogic.blackAttacks();
         } else{
-            this.setX(Drawer.BoardToPixelPos(this.col));
-            this.setY(Drawer.BoardToPixelPos(this.row));
+            this.setX(Painter.BoardToPixelPos(this.col));
+            this.setY(Painter.BoardToPixelPos(this.row));
         }
         Main.panel.repaint();
+    }
+    public void setPosition(int target_row, int target_col){
+        GameLogic.piece_position[this.getRow()][this.getCol()] = null;
+        GameLogic.piece_position[target_row][target_col] = this;
+        this.setX(Painter.BoardToPixelPos(target_col));
+        this.setY(Painter.BoardToPixelPos(target_row));
+        this.setCol(target_col);
+        this.setRow(target_row);
+        if(this instanceof firstMovable){
+            ((firstMovable) this).setMovedTrue();
+        }
     }
     public abstract boolean isLegalMove(int target_row , int target_col);
 
@@ -129,4 +150,6 @@ public abstract class Piece {
     public void setY(int y) {
         this.y = y;
     }
+
+
 }

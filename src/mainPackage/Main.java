@@ -1,10 +1,17 @@
+package mainPackage;
+
+import gameplay.GameLogic;
+import painter.Painter;
+import gameplay.MouseHandler;
+import pieces.Piece;
+
 import javax.swing.*;
 
 
 public class Main {
 
-    public static Drawer panel;
-    public static Piece[][] piece_position;
+    public static Painter panel;
+
 
 
     public static void main(String[] args) {
@@ -14,16 +21,20 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Chess");
         window.setLocationRelativeTo(null);
-        window.setVisible(true);
+
         window.setSize(1000,1000);
 
-        panel = new Drawer();
+        GameLogic.initPosition(Piece.init_pieces());
+
+        panel = new Painter();
         window.add(panel);
 
-        piece_position = new Piece[8][8];
-        GamePlay.initPosition(piece_position,Piece.init_pieces());
         MouseHandler mouse = new MouseHandler();
         panel.addMouseListener(mouse);
         panel.addMouseMotionListener(mouse);
+        window.setVisible(true);
+
+
+
     }
 }

@@ -1,8 +1,13 @@
+package painter;
+
+import gameplay.GameLogic;
+import pieces.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 
 
-public class Drawer extends JPanel {
+public class Painter extends JPanel {
     private static final int tileSize = 100;
 
 
@@ -10,7 +15,7 @@ public class Drawer extends JPanel {
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
-        Drawer.drawBoard(g);
+        Painter.drawBoard(g);
         drawPieces(g);
     }
 
@@ -37,7 +42,7 @@ public class Drawer extends JPanel {
         g.setColor(Color.black);
         for(int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if((piece = Main.piece_position[i][j] )!= null) {
+                if((piece = GameLogic.piece_position[i][j] )!= null) {
                     g.drawString(piece.getName(),piece.getX() + tileSize/2, piece.getY()  + tileSize/2);
                     g.drawOval(piece.getX(),piece.getY(),tileSize,tileSize);
                 }

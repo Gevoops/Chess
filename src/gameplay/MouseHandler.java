@@ -1,3 +1,9 @@
+package gameplay;
+
+import painter.Painter;
+import mainPackage.Main;
+import pieces.Piece;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -13,17 +19,22 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         }
 
         @Override
-        public void mouseDragged(MouseEvent e) {
-            super.mouseDragged(e);
-            if(isInsideBoard(e.getX(),e.getY()) ){
-                if(!((piece = Main.piece_position[(e.getY() - Drawer.getOffset())/Drawer.getTileSize()][(e.getX()- Drawer.getOffset())/Drawer.getTileSize()])==null) && !piece_lifted){
+        public void mousePressed(MouseEvent e) {
+            super.mousePressed(e);
+            if(isInsideBoard(e.getX(),e.getY())){
+                if(!((piece = GameLogic.piece_position[(e.getY() - Painter.getOffset())/ Painter.getTileSize()][(e.getX()- Painter.getOffset())/ Painter.getTileSize()])==null) && !piece_lifted){
                     piece_lifted = true;
                     lifted_piece = piece;
                 }
             }
+        }
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            super.mouseDragged(e);
+
             if(piece_lifted){
-                lifted_piece.setX(e.getX() - Drawer.getTileSize()/2);
-                lifted_piece.setY(e.getY() - Drawer.getTileSize()/2);
+                lifted_piece.setX(e.getX() - Painter.getTileSize()/2);
+                lifted_piece.setY(e.getY() - Painter.getTileSize()/2);
                 Main.panel.repaint();
             }
         }
@@ -32,15 +43,15 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         public void mouseReleased(MouseEvent e) {
             super.mouseReleased(e);
             if(piece_lifted) {
-                lifted_piece.move(Drawer.pixelToBoardPos(e.getY()),Drawer.pixelToBoardPos(e.getX()));
+                lifted_piece.move(Painter.pixelToBoardPos(e.getY()), Painter.pixelToBoardPos(e.getX()));
                 lifted_piece = null;
                 piece_lifted = false;
                 Main.panel.repaint();
             }
         }
     private boolean isInsideBoard(int mouseX, int mouseY){
-        return mouseX <= Drawer.getTileSize() * 8 + Drawer.getOffset() && mouseX >= Drawer.getOffset()
-                && mouseY <= Drawer.getTileSize() * 8 + Drawer.getOffset() && mouseY >= Drawer.getOffset();
+        return mouseX <= Painter.getTileSize() * 8 + Painter.getOffset() && mouseX >= Painter.getOffset()
+                && mouseY <= Painter.getTileSize() * 8 + Painter.getOffset() && mouseY >= Painter.getOffset();
     }
 
 }
