@@ -3,15 +3,16 @@ package pieces;
 import gameplay.GameLogic;
 
 public class Queen extends Piece{
-    public Queen(int row, int col, String color,String name) {
-        super(row, col, color,name);
+    public Queen(int row, int col, Boolean isWhite,String name) {
+        super(row, col, isWhite ,name);
     }
 
 
     @Override
     public boolean isLegalMove(int target_row, int target_col) {
-        return(target_col == this.getCol() || target_row == this.getRow()) && checkCollisionRook(target_row,target_col) ||
-        Math.abs(target_col - this.getCol()) == Math.abs(target_row - this.getRow()) && checkCollisionBishop(target_row, target_col);
+        return(super.isLegalMove(target_row, target_col)
+                && ((target_col == this.getCol() || target_row == this.getRow()) && checkCollisionRook(target_row,target_col)) ||
+                (Math.abs(target_col - this.getCol()) == Math.abs(target_row - this.getRow()) && checkCollisionBishop(target_row, target_col)));
 
     }
 
@@ -28,7 +29,7 @@ public class Queen extends Piece{
 
         for (int i = 0; i < Math.abs(target_row - this.getRow());i++,row_index += row_increment, col_index += col_increment){
             if(GameLogic.piece_position[row_index][col_index] != null){
-                if(this.getColor().equals(GameLogic.piece_position[row_index][col_index].getColor())){
+                if(this.isWhite() == GameLogic.piece_position[row_index][col_index].isWhite()){
                     return false;
                 } else {
                     if(secondEnemyColor){
@@ -59,7 +60,7 @@ public class Queen extends Piece{
 
         for (int i = 0; i < distance;i++,row_index += row_increment,col_index+=col_increment){
             if(GameLogic.piece_position[row_index][col_index] != null){
-                if(this.getColor().equals(GameLogic.piece_position[row_index][col_index].getColor())){
+                if(this.isWhite() == GameLogic.piece_position[row_index][col_index].isWhite()){
                     return false;
                 } else {
                     if(secondEnemyColor){
