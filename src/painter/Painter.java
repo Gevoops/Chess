@@ -17,6 +17,7 @@ public class Painter extends JPanel {
         super.paintComponent(g);
         Painter.drawBoard(g);
         drawPieces(g);
+        drawTurn(g);
     }
 
     public static void drawBoard(Graphics g) {
@@ -33,6 +34,17 @@ public class Painter extends JPanel {
                 g.fillRect(BoardToPixelPos(i),BoardToPixelPos(j),tileSize,tileSize);
             }
         }
+    }
+    public static void  drawTurn(Graphics g){
+        Font customFont = new Font("SansSerif", Font.BOLD, 40);
+        g.setFont(customFont);
+        g.setColor(Color.black);
+        if(GameLogic.isWhiteTurn){
+            g.drawString("White's turn", offset/2,offset/2);
+        }else{
+            g.drawString("Black's turn", offset/2,offset/2);
+        }
+
     }
 
     public static void drawPieces(Graphics g){

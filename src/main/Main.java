@@ -1,4 +1,4 @@
-package mainPackage;
+package main;
 
 import gameplay.GameLogic;
 import painter.Painter;

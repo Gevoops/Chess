@@ -12,6 +12,7 @@ public class GameLogic {
     public static boolean[][] whiteAttacks = new boolean[8][8];
     public static boolean[][] blackAttacks = new boolean[8][8];
     public static boolean isWhiteTurn = true;
+    public static Piece lastDoubleStepMovedPawn = null;
 
     public static void initPosition( ArrayList<Piece> pieces){
         piece_position = new Piece[8][8];
@@ -51,7 +52,7 @@ public class GameLogic {
                         board[i][j] = true;
                     }
                 }else {
-                    if(i == piece.getRow() + (piece.isWhite() ? -1 : 1) && (j == piece.getCol() - 1 || j == piece.getCol() + 1)){
+                    if(i == piece.getRow() + (piece.isWhite() ? -1 : 1) && Math.abs(j - piece.getCol()) == 1){
                         board[i][j] = true;
                     }
                 }

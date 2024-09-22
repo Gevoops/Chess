@@ -2,7 +2,7 @@ package pieces;
 import painter.*;
 import java.util.ArrayList;
 import gameplay.GameLogic;
-import mainPackage.Main;
+import main.Main;
 
 public abstract class Piece {
     protected int row;
@@ -30,6 +30,15 @@ public abstract class Piece {
                     ((Rook)GameLogic.piece_position[target_row][target_col - 2]).setMovedTrue();
                     GameLogic.piece_position[target_row][target_col  -2].setPosition(target_row,target_col + 1);
                 }
+            }
+            GameLogic.lastDoubleStepMovedPawn = null;
+            if (this instanceof Pawn){
+                if(Math.abs(target_row - row) == 2){
+                    GameLogic.lastDoubleStepMovedPawn = this;
+                }else if(Math.abs(target_col - col) == 1 && GameLogic.piece_position[target_row][target_col] == null){
+                    GameLogic.piece_position[target_row + (isWhite ? 1 : -1)][target_col] = null;
+                }
+
             }
             this.setPosition(target_row,target_col);
             if(this instanceof firstMovable){

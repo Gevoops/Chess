@@ -1,7 +1,7 @@
 package gameplay;
 
 import painter.Painter;
-import mainPackage.Main;
+import main.Main;
 import pieces.Piece;
 
 import java.awt.event.MouseAdapter;
