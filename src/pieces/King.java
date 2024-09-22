@@ -23,15 +23,6 @@ public class King extends Piece implements firstMovable {
     @Override
     public boolean isLegalMove(int target_row, int target_col) {
         if(super.isLegalMove(target_row,target_col)){
-            if(this.isWhite()){ // cant step into attacked square
-                if(GameLogic.blackAttacks[target_row][target_col]){
-                    return false;
-                }
-            }else{
-                if (GameLogic.whiteAttacks[target_row][target_col]){
-                    return false;
-                }
-            }
             if(Math.abs(target_col -this.getCol()) <= 1 && Math.abs(target_row - this.getRow())<= 1) { // normal king step
                 return GameLogic.piece_position[target_row][target_col] == null || !GameLogic.piece_position[target_row][target_col].isWhite() == this.isWhite();
             }else if(target_row == this.getRow() && Math.abs(target_col - this.getCol()) == 2) { // trying to castle?

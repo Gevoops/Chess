@@ -1,5 +1,7 @@
 package pieces;
 
 public interface firstMovable {
-    void setMovedTrue();
+    default void setMovedTrue(){
+
+    }
 }

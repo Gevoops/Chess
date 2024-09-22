@@ -5,8 +5,8 @@ import gameplay.GameLogic;
 import mainPackage.Main;
 
 public abstract class Piece {
-    private int row;
-    private int col;
+    protected int row;
+    protected int col;
     private final boolean isWhite;
     private String name;
     private int x;
@@ -21,7 +21,7 @@ public abstract class Piece {
         y = row* Painter.getTileSize()+ Painter.getOffset();
     }
     public void move(int target_row , int target_col) {
-        if(isLegalMove(target_row,target_col) && !GameLogic.willKingBeInCheck(target_row,target_col,this)) {
+        if((this.isWhite == GameLogic.isWhiteTurn) &&isLegalMove(target_row,target_col) && !GameLogic.willKingBeInCheck(target_row,target_col,this)) {
             if(this instanceof  King){
                 if(((King) this).isValidKingSideCastle(target_row,target_col)){
                     ((Rook)GameLogic.piece_position[target_row][target_col + 1]).setMovedTrue();
@@ -32,6 +32,10 @@ public abstract class Piece {
                 }
             }
             this.setPosition(target_row,target_col);
+            if(this instanceof firstMovable){
+                ((firstMovable) this).setMovedTrue();
+            }
+            GameLogic.isWhiteTurn = !GameLogic.isWhiteTurn;
             GameLogic.whiteAttacks();
             GameLogic.blackAttacks();
 
@@ -49,12 +53,9 @@ public abstract class Piece {
         this.setY(Painter.BoardToPixelPos(target_row));
         this.setCol(target_col);
         this.setRow(target_row);
-        if(this instanceof firstMovable){
-            ((firstMovable) this).setMovedTrue();
-        }
     }
     public boolean isLegalMove(int target_row , int target_col) {
-        return  target_col < 8 && target_col >= 0 && target_row >= 0 && target_row < 8 && (target_col != this.getCol() || target_row != this.getRow());
+        return  (target_col < 8 && target_col >= 0 && target_row >= 0 && target_row < 8 && (target_col != this.getCol() || target_row != this.getRow()));
     }
 
     public static ArrayList<Piece> init_pieces(){

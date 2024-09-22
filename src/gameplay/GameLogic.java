@@ -11,6 +11,7 @@ public class GameLogic {
     public static Piece[][] piece_position;
     public static boolean[][] whiteAttacks = new boolean[8][8];
     public static boolean[][] blackAttacks = new boolean[8][8];
+    public static boolean isWhiteTurn = true;
 
     public static void initPosition( ArrayList<Piece> pieces){
         piece_position = new Piece[8][8];
@@ -65,7 +66,7 @@ public class GameLogic {
         Piece potentially_eaten; // save potentially eaten piece to return it later.
         potentially_eaten = piece_position[target_row][target_col];
 
-        piece_position[target_row][target_col] = movingPiece;
+        movingPiece.setPosition(target_row,target_col);
         piece_position[initial_row][initial_col] = null;
         if(movingPiece.isWhite()){
             blackAttacks();
@@ -78,8 +79,9 @@ public class GameLogic {
                 result = true;
             }
         }
-        piece_position[initial_row][initial_col] = movingPiece;
+        movingPiece.setPosition(initial_row,initial_col);
         piece_position[target_row][target_col] = potentially_eaten;
+
         return result;
     }
 }
