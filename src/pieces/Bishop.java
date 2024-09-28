@@ -1,9 +1,11 @@
 package pieces;
 
 
+import java.awt.image.BufferedImage;
+
 public class Bishop extends Piece implements MovingLikeABishop{
-    public Bishop(int row, int col, Boolean isWhite,String name) {
-        super(row, col, isWhite,name);
+    public Bishop(int row, int col, Boolean isWhite, BufferedImage image) {
+        super(row, col, isWhite,  image);
     }
 
 

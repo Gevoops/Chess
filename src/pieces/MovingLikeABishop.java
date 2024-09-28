@@ -17,8 +17,8 @@ public interface MovingLikeABishop {
         row_index += row_increment;
 
         for (int i = 0; i < Math.abs(target_row - piece.getRow());i++,row_index += row_increment, col_index += col_increment){
-            if(GameLogic.piece_position[row_index][col_index] != null){
-                if(piece.isWhite() == GameLogic.piece_position[row_index][col_index].isWhite() || (target_row != row_index)){
+            if(GameLogic.piecePosition[row_index][col_index] != null){
+                if(piece.isWhite() == GameLogic.piecePosition[row_index][col_index].isWhite() || (target_row != row_index)){
                     return false;
                 } else {
                     if(secondEnemyColor){

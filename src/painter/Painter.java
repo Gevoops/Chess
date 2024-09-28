@@ -1,17 +1,20 @@
 package painter;
 
 import gameplay.GameLogic;
+import main.Main;
 import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-public class Painter extends JPanel {
-    private static final int tileSize = 100;
+public class Painter extends JPanel implements ActionListener {
+    private static final int tileSize = 128;
+    public static int flip = 0;
 
-
-    private static final int offset = 100;
+    private static final int offset = 128;
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -31,7 +34,7 @@ public class Painter extends JPanel {
                     color = brown;
                 }
                 g.setColor(color);
-                g.fillRect(BoardToPixelPos(i),BoardToPixelPos(j),tileSize,tileSize);
+                g.fillRect(boardToPixelPos(i), boardToPixelPos(j),tileSize,tileSize);
             }
         }
     }
@@ -48,23 +51,24 @@ public class Painter extends JPanel {
     }
 
     public static void drawPieces(Graphics g){
-        Piece piece;
-        Font customFont = new Font("Serif", Font.PLAIN, 24); // Font size 24
-        g.setFont(customFont);
-        g.setColor(Color.black);
-        for(int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if((piece = GameLogic.piece_position[i][j] )!= null) {
-                    g.drawString(piece.getName(),piece.getX() + tileSize/2, piece.getY()  + tileSize/2);
-                    g.drawOval(piece.getX(),piece.getY(),tileSize,tileSize);
-                }
-            }
+        for(Piece piece : GameLogic.pieces) {
+            g.drawImage(piece.getImage(), flippedPixPos(piece.getX()) , flippedPixPos(piece.getY()) ,tileSize,tileSize, Main.panel);
+        }
+
+    }
+    public static int flippedPixPos(int pixelPos){
+        int posinbord = (pixelPos - offset);
+        int posinsquare = posinbord % tileSize + (posinbord < 0 ? tileSize : 0);
+        if(flip == 1){
+            return (7  - pixelToBoardPos(pixelPos)) * tileSize + posinsquare  + offset;
+        } else {
+            return pixelPos;
         }
     }
     public static int pixelToBoardPos(int coordinate){
-        return (coordinate - offset)/tileSize;
+        return (coordinate - offset)/tileSize + (coordinate - offset < 0 ? -1 : 0); //make negative numbers round properly
     }
-    public static int BoardToPixelPos(int coordinate){
+    public static int boardToPixelPos(int coordinate){
         return coordinate * tileSize + offset;
     }
 
@@ -77,4 +81,9 @@ public class Painter extends JPanel {
     }
 
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        flip = 1 - flip;
+        repaint();
+    }
 }

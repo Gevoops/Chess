@@ -24,8 +24,8 @@ public interface MovingLikeARook {
         }
 
         for (int i = 0; i < distance;i++,row_index += row_increment,col_index+=col_increment){
-            if(GameLogic.piece_position[row_index][col_index] != null){
-                if(piece.isWhite() == (GameLogic.piece_position[row_index][col_index].isWhite()) || (target_col != col_index || target_row != row_index)){
+            if(GameLogic.piecePosition[row_index][col_index] != null){
+                if(piece.isWhite() == (GameLogic.piecePosition[row_index][col_index].isWhite()) || (target_col != col_index || target_row != row_index)){
                     return false;
                 } else {
                     if(secondEnemyColor){

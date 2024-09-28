@@ -1,9 +1,11 @@
 package pieces;
 
 
+import java.awt.image.BufferedImage;
+
 public class Queen extends Piece implements MovingLikeARook,MovingLikeABishop{
-    public Queen(int row, int col, Boolean isWhite,String name) {
-        super(row, col, isWhite ,name);
+    public Queen(int row, int col, Boolean isWhite, BufferedImage image) {
+        super(row, col, isWhite ,image);
     }
 
     @Override

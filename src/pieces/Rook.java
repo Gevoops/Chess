@@ -1,11 +1,12 @@
 package pieces;
 
 
+import java.awt.image.BufferedImage;
 
 public class Rook extends Piece implements firstMovable,MovingLikeARook{
     private boolean moved = false;
-    public Rook(int row, int col, Boolean isWhite,String name) {
-        super(row, col, isWhite,name);
+    public Rook(int row, int col, Boolean isWhite, BufferedImage image) {
+        super(row, col, isWhite,  image);
     }
 
 

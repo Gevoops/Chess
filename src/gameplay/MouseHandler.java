@@ -12,19 +12,17 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         private Piece piece;
         private boolean piece_lifted;
         private Piece lifted_piece;
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            super.mouseClicked(e);
-            System.out.println("click test");
-        }
 
         @Override
         public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
             if(isInsideBoard(e.getX(),e.getY())){
-                if(!((piece = GameLogic.piece_position[(e.getY() - Painter.getOffset())/ Painter.getTileSize()][(e.getX()- Painter.getOffset())/ Painter.getTileSize()])==null) && !piece_lifted){
+                if(((piece = GameLogic.piecePosition[Painter.pixelToBoardPos(Painter.flippedPixPos(e.getY()))][Painter.pixelToBoardPos(Painter.flippedPixPos(e.getX()))]) != null)){
+
                     piece_lifted = true;
                     lifted_piece = piece;
+                    GameLogic.pieces.remove(piece);
+                    GameLogic.pieces.add(piece);
                 }
             }
         }
@@ -33,8 +31,8 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
             super.mouseDragged(e);
 
             if(piece_lifted){
-                lifted_piece.setX(e.getX() - Painter.getTileSize()/2);
-                lifted_piece.setY(e.getY() - Painter.getTileSize()/2);
+                lifted_piece.setX(Painter.flippedPixPos(e.getX() - Painter.getTileSize()/2));
+                lifted_piece.setY(Painter.flippedPixPos(e.getY() - Painter.getTileSize()/2));
                 Main.panel.repaint();
             }
         }
@@ -43,7 +41,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         public void mouseReleased(MouseEvent e) {
             super.mouseReleased(e);
             if(piece_lifted) {
-                lifted_piece.move(Painter.pixelToBoardPos(e.getY()), Painter.pixelToBoardPos(e.getX()));
+                lifted_piece.move(Painter.pixelToBoardPos(Painter.flippedPixPos(e.getY())), Painter.pixelToBoardPos(Painter.flippedPixPos(e.getX())) );
                 lifted_piece = null;
                 piece_lifted = false;
                 Main.panel.repaint();
