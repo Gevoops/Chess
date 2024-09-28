@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 
 public class Painter extends JPanel implements ActionListener {
-    private static final int tileSize = 128;
+    private static final int tileSize = 142;
     public static int flip = 0;
 
     private static final int offset = 128;
@@ -25,16 +25,21 @@ public class Painter extends JPanel implements ActionListener {
 
     public static void drawBoard(Graphics g) {
         Color brown = new Color(222,184,135);
-        Color color;
+        Color[] color = {Color.white,brown};
+        Font customFont = new Font("SansSerif", Font.PLAIN, tileSize/5);  // 36 is the size of the font
+        g.setFont(customFont);
         for(int i = 0; i < 8; i ++){
             for(int j = 0; j < 8; j++){
-                if((i+j) % 2 == 0){
-                    color =  Color.white;
-                } else {
-                    color = brown;
-                }
-                g.setColor(color);
+                g.setColor(color[(i + j) % 2]);
                 g.fillRect(boardToPixelPos(i), boardToPixelPos(j),tileSize,tileSize);
+                if(j == 0){
+                    g.setColor(color[(i + j + 1) % 2]);
+                    g.drawString((flip == 1 ?  i  + 1: 8 - i) + "" ,offset + tileSize/15, offset + tileSize * i + tileSize/4);
+                }
+                if(i == 7){
+                    g.setColor(color[(i + j + 1) % 2]);
+                    g.drawString((char)(flip == 1 ? (97 + 7 - j ) : 97 + j) + "" ,offset + tileSize * j + tileSize - tileSize/7, offset + tileSize * i + tileSize - tileSize/15);
+                }
             }
         }
     }

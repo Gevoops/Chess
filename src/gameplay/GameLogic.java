@@ -56,7 +56,7 @@ public class GameLogic {
                         board[i][j] = true;
                     }
                 }else {
-                    if(i == piece.getRow() + (piece.isWhite() ? -1 : 1) && Math.abs(j - piece.getCol()) == 1){
+                    if(i == piece.getRow() + ((Pawn)piece).getDirection() && Math.abs(j - piece.getCol()) == 1){
                         board[i][j] = true;
                     }
                 }
@@ -64,13 +64,11 @@ public class GameLogic {
         }
     }
     public static boolean checkLegalMoveExists(boolean amWhite){
-        for (int i =0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                if(amWhite && piecePosition[i][j] != null && piecePosition[i][j].isWhite() && checkLegalMoveExists(piecePosition[i][j])){
-                    return true;
-                } else if (!amWhite && piecePosition[i][j] != null && !piecePosition[i][j].isWhite() && checkLegalMoveExists(piecePosition[i][j])){
-                    return true;
-                }
+        for (Piece piece : pieces){
+            if(amWhite && piece.isWhite() && checkLegalMoveExists(piece)){
+                return true;
+            } else if (!amWhite && !piece.isWhite() && checkLegalMoveExists(piece)){
+                return true;
             }
         }
         return false;

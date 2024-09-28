@@ -13,15 +13,16 @@ import java.awt.image.BufferedImage;
 
 public class Pawn extends Piece implements firstMovable {
     private boolean moved = false;
+    private int direction;
     public Pawn(int row, int col, Boolean isWhite, BufferedImage image) {
         super(row, col, isWhite, image);
+        direction = isWhite ? -1 : 1;
     }
 
 
 
     @Override
     public boolean isLegalMove(int target_row, int target_col) {
-        int direction = isWhite() ? -1 : 1;
         int curr_row = row, curr_col = col;
 
         if (super.isLegalMove(target_row, target_col)) {
@@ -99,4 +100,9 @@ public class Pawn extends Piece implements firstMovable {
     public void setMovedTrue(){
         moved = true;
     }
+
+    public int getDirection() {
+        return direction;
+    }
 }
+
