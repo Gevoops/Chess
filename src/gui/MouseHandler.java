@@ -1,5 +1,6 @@
-package gameplay;
+package gui;
 
+import gameplay.GameLogic;
 import painter.Painter;
 import main.Main;
 import pieces.Piece;
@@ -9,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 public class MouseHandler extends MouseAdapter implements MouseMotionListener {
-        private Piece piece;
         private boolean piece_lifted;
         private Piece lifted_piece;
 
@@ -17,12 +17,15 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener {
         public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
             if(isInsideBoard(e.getX(),e.getY())){
+                Piece piece;
                 if(((piece = GameLogic.piecePosition[Painter.pixelToBoardPos(Painter.flippedPixPos(e.getY()))][Painter.pixelToBoardPos(Painter.flippedPixPos(e.getX()))]) != null)){
-
                     piece_lifted = true;
                     lifted_piece = piece;
+                    lifted_piece.setX(Painter.flippedPixPos(e.getX() - Painter.getTileSize()/2));
+                    lifted_piece.setY(Painter.flippedPixPos(e.getY() - Painter.getTileSize()/2));
                     GameLogic.pieces.remove(piece);
                     GameLogic.pieces.add(piece);
+                    Main.panel.repaint();
                 }
             }
         }

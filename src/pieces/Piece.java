@@ -1,4 +1,5 @@
 package pieces;
+import gui.Gui;
 import painter.*;
 
 import java.awt.image.BufferedImage;
@@ -6,10 +7,11 @@ import java.util.ArrayList;
 import gameplay.GameLogic;
 import main.Main;
 
+
 public abstract class Piece {
     protected int row;
     protected int col;
-    private final boolean isWhite;
+    protected final boolean isWhite;
 
     private int x;
     private int y;
@@ -21,7 +23,6 @@ public abstract class Piece {
         this.row = row;
         this.col = col;
         this.isWhite = isWhite;
-
         x = col * Painter.getTileSize()+ Painter.getOffset();
         y = row* Painter.getTileSize()+ Painter.getOffset();
         this.image = image;
@@ -31,21 +32,20 @@ public abstract class Piece {
         row = piece.row;
         col = piece.col;
         isWhite = piece.isWhite;
-
         x = piece.x;
         y = piece.y;
         image = piece.image;
     }
     public void move(int target_row , int target_col) {
-        if((this.isWhite == GameLogic.isWhiteTurn) &&isLegalMove(target_row,target_col) && !GameLogic.willKingBeInCheck(target_row,target_col,this) && !GameLogic.promotionMenuOpen) {
+        if((this.isWhite == GameLogic.isWhiteTurn) &&isLegalMove(target_row,target_col) && !GameLogic.willKingBeInCheck(target_row,target_col,this) && !Gui.promotionMenuOpen) {
             if(this instanceof  King){
                 if(((King) this).isValidKingSideCastle(target_row,target_col)){
                     ((Rook)GameLogic.piecePosition[target_row][7]).setMovedTrue();
-                    GameLogic.piecePosition[target_row][7].setPosition(target_row,5);
+                    GameLogic.piecePosition[target_row][7].changePosition(target_row,5);
                     target_col = 6;
                 } else if (((King) this).isValidQueenSideCastle(target_row,target_col)){
                     ((Rook)GameLogic.piecePosition[target_row][0]).setMovedTrue();
-                    GameLogic.piecePosition[target_row][0].setPosition(target_row,3);
+                    GameLogic.piecePosition[target_row][0].changePosition(target_row,3);
                     target_col = 2;
                 }
             }
@@ -54,19 +54,18 @@ public abstract class Piece {
                 if(Math.abs(target_row - row) == 2){
                     GameLogic.lastDoubleStepMovedPawn = this;
                 }
-                ((Pawn)this).promotion(target_row,target_col,this);
+                Gui.promotionMenu(target_row,target_col,this);
             }
             if(GameLogic.piecePosition[target_row][target_col] != null){
                 GameLogic.eat(GameLogic.piecePosition[target_row][target_col]);
             }
-            this.setPosition(target_row,target_col);
+            this.changePosition(target_row,target_col);
             if(this instanceof firstMovable){
                 ((firstMovable) this).setMovedTrue();
             }
 
             GameLogic.isWhiteTurn = !GameLogic.isWhiteTurn;
-            GameLogic.whiteAttacks();
-            GameLogic.blackAttacks();
+            GameLogic.updateAttacks();
             GameLogic.checkOrMateOrStale();
 
 
@@ -78,7 +77,7 @@ public abstract class Piece {
         }
         Main.panel.repaint();
     }
-    public void setPosition(int target_row, int target_col){
+    public void changePosition(int target_row, int target_col){
         GameLogic.piecePosition[this.getRow()][this.getCol()] = null;
         GameLogic.piecePosition[target_row][target_col] = this;
         this.setX(Painter.boardToPixelPos(target_col));

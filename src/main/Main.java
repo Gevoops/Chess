@@ -2,7 +2,7 @@ package main;
 
 import gameplay.GameLogic;
 import painter.Painter;
-import gameplay.MouseHandler;
+import gui.MouseHandler;
 import pieces.Piece;
 
 import javax.swing.*;

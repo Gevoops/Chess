@@ -1,5 +1,6 @@
 package gameplay;
 
+
 import pieces.King;
 import pieces.Pawn;
 import pieces.Piece;
@@ -14,12 +15,12 @@ public class GameLogic {
     public static boolean[][] blackAttacks = new boolean[8][8];
     public static boolean isWhiteTurn = true;
     public static Piece lastDoubleStepMovedPawn = null;
-    public static boolean promotionMenuOpen = false;
+
     public static int checkCount = 0;
 
     public static void initPosition(){
         piecePosition = new Piece[8][8];
-        for (int i = 0; i < 8;i++) {
+        for (int i = 0; i < 8; i++) {
             for (int j =0; j < 8; j ++) {
                 piecePosition[i][j] = null;
             }
@@ -91,8 +92,7 @@ public class GameLogic {
         Piece potentially_eaten; // save potentially eaten piece to return it later.
         potentially_eaten = piecePosition[target_row][target_col];
 
-        movingPiece.setPosition(target_row,target_col);
-        piecePosition[initial_row][initial_col] = null;
+        movingPiece.changePosition(target_row,target_col);
         if(movingPiece.isWhite()){
             blackAttacks();
             if(blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()]){
@@ -104,14 +104,14 @@ public class GameLogic {
                 result = true;
             }
         }
-        movingPiece.setPosition(initial_row,initial_col);
+        movingPiece.changePosition(initial_row,initial_col);
         piecePosition[target_row][target_col] = potentially_eaten;
 
         return result;
     }
     public static void checkOrMateOrStale(){
         boolean check = false;
-        if(inCheck(isWhiteTurn)){
+        if(inCheck()){
             System.out.println("check! " + ++checkCount );
             check = true;
         }
@@ -124,16 +124,26 @@ public class GameLogic {
         }
 
     }
-    public static boolean inCheck(Boolean white){
-        if(white) {
-            return blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()];
-        } else {
-            return whiteAttacks[King.blackKing.getRow()][King.blackKing.getCol()];
-        }
+
+    public static void updateAttacks(){
+        GameLogic.whiteAttacks();
+        GameLogic.blackAttacks();
+    }
+    public static boolean inCheck(){
+        return blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()]
+                || whiteAttacks[King.blackKing.getRow()][King.blackKing.getCol()] ;
     }
 
     public static void eat(Piece eaten){
         piecePosition[eaten.getRow()][eaten.getCol()] = null;
         pieces.remove(eaten);
+    }
+
+    public static void promote(Piece pawn, Piece target_piece){
+        GameLogic.pieces.remove(pawn);
+        GameLogic.pieces.add(target_piece);
+        GameLogic.piecePosition[pawn.getRow()][pawn.getCol()] = target_piece;
+        GameLogic.updateAttacks();
+        GameLogic.checkOrMateOrStale();
     }
 }
