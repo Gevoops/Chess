@@ -64,7 +64,8 @@ public class GameLogic {
         }
     }
     public static boolean checkLegalMoveExists(boolean amWhite){
-        for (Piece piece : pieces){
+        ArrayList<Piece> temp_pieces = new ArrayList<>(pieces); //must copy to avoid ConcurrentModificationException
+        for (Piece piece : temp_pieces){
             if(amWhite && piece.isWhite() && checkLegalMoveExists(piece)){
                 return true;
             } else if (!amWhite && !piece.isWhite() && checkLegalMoveExists(piece)){
@@ -109,7 +110,7 @@ public class GameLogic {
     public static void checkOrMateOrStale(){
         boolean check = false;
         if(King.whiteKing.isInCheck() || King.blackKing.isInCheck()){
-            System.out.println("check! " + ++checkCount );
+            System.out.println("check! " + ++checkCount);
             check = true;
         }
         if(!checkLegalMoveExists(isWhiteTurn)){

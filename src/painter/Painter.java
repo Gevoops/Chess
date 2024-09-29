@@ -2,6 +2,7 @@ package painter;
 
 import gameplay.GameLogic;
 import main.Main;
+import pieces.King;
 import pieces.Piece;
 
 import javax.swing.*;
@@ -20,6 +21,9 @@ public class Painter extends JPanel {
         Painter.drawBoard(g);
         drawPieces(g);
         drawTurn(g);
+        if(King.whiteKing.isInCheck() || King.blackKing.isInCheck()){
+            drawCheck(g);
+        }
     }
 
     public static void drawBoard(Graphics g) {
@@ -51,6 +55,14 @@ public class Painter extends JPanel {
         }else{
             g.drawString("Black's turn", offset/2,offset/2);
         }
+
+    }
+
+    public static void drawCheck(Graphics g){
+        Font customFont = new Font("SansSerif", Font.BOLD, 40);
+        g.setFont(customFont);
+        g.setColor(Color.black);
+        g.drawString("check!", offset + 3 *tileSize,offset/2);
 
     }
 
