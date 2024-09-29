@@ -11,8 +11,6 @@ public class Pawn extends Piece implements firstMovable {
         direction = isWhite ? -1 : 1;
     }
 
-
-
     @Override
     public boolean isLegalMove(int target_row, int target_col) {
         return super.isLegalMove(target_row, target_col) &&
@@ -20,6 +18,7 @@ public class Pawn extends Piece implements firstMovable {
                 || isLegalEat(target_row, target_col)
                 || isLegalEnpassant(target_row,target_col));
     }
+
     private boolean checkCollision(int target_row, int target_col){
         return GameLogic.piecePosition[target_row][target_col] == null && (GameLogic.piecePosition[row + direction][col] == null);
     }
@@ -43,7 +42,6 @@ public class Pawn extends Piece implements firstMovable {
             return false;
         }
     }
-
 
     public void setMovedTrue(){
         moved = true;

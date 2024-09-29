@@ -6,15 +6,15 @@ import java.awt.image.BufferedImage;
 
 public class King extends Piece implements firstMovable {
     private boolean moved = false;
+    private boolean inCheck = false;
     public static King whiteKing;
     public static King blackKing;
 
-    public King(int row, int col, Boolean isWhite,  BufferedImage image) {
-
+    public King(int row, int col, Boolean isWhite, BufferedImage image) {
         super(row, col, isWhite,  image);
-        if(isWhite){
+        if (this.isWhite){
             whiteKing = this;
-        }else{
+        } else {
             blackKing = this;
         }
     }
@@ -62,4 +62,11 @@ public class King extends Piece implements firstMovable {
         moved = true;
     }
 
+    public boolean isInCheck() {
+        return inCheck;
+    }
+
+    public void setInCheck(boolean inCheck) {
+        this.inCheck = inCheck;
+    }
 }

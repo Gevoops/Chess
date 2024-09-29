@@ -6,11 +6,10 @@ import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
-public class Painter extends JPanel implements ActionListener {
+
+public class Painter extends JPanel {
     private static final int tileSize = 142;
     public static int flip = 0;
 
@@ -62,10 +61,10 @@ public class Painter extends JPanel implements ActionListener {
 
     }
     public static int flippedPixPos(int pixelPos){
-        int posinbord = (pixelPos - offset);
-        int posinsquare = posinbord % tileSize + (posinbord < 0 ? tileSize : 0);
+        int posInBoard = (pixelPos - offset);
+        int posInSquare = posInBoard % tileSize + (posInBoard < 0 ? tileSize : 0);
         if(flip == 1){
-            return (7  - pixelToBoardPos(pixelPos)) * tileSize + posinsquare  + offset;
+            return (7  - pixelToBoardPos(pixelPos)) * tileSize + posInSquare  + offset;
         } else {
             return pixelPos;
         }
@@ -86,9 +85,5 @@ public class Painter extends JPanel implements ActionListener {
     }
 
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        flip = 1 - flip;
-        repaint();
-    }
+
 }

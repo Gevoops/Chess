@@ -33,32 +33,31 @@ public class GameLogic {
 
     public static void whiteAttacks(){
         whiteAttacks = new boolean[8][8];
-        for(int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                if(piecePosition[i][j] != null && piecePosition[i][j].isWhite())
-                    attack(piecePosition[i][j],whiteAttacks);
+        for(Piece piece : pieces) {
+            if(piece.isWhite()){
+                attack(piece,whiteAttacks);
             }
         }
     }
+
     public static void blackAttacks(){
         blackAttacks = new boolean[8][8];
-        for(int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                if(piecePosition[i][j] != null && !piecePosition[i][j].isWhite())
-                   attack(piecePosition[i][j],blackAttacks);
+        for(Piece piece : pieces) {
+            if(!piece.isWhite()){
+                attack(piece,blackAttacks);
             }
         }
     }
-    private static void attack(Piece piece,boolean[][] board){
+    private static void attack(Piece piece,boolean[][] attackMatrix){
         for (int i = 0; i < 8; i ++) {
             for (int j = 0; j < 8; j++){
-                if(!(piece instanceof Pawn)) {
-                    if (piece.isLegalMove(i, j)) {
-                        board[i][j] = true;
+                if(piece instanceof Pawn) {
+                    if(i == piece.getRow() + ((Pawn)piece).getDirection() && Math.abs(j - piece.getCol()) == 1){
+                        attackMatrix[i][j] = true;
                     }
                 }else {
-                    if(i == piece.getRow() + ((Pawn)piece).getDirection() && Math.abs(j - piece.getCol()) == 1){
-                        board[i][j] = true;
+                    if (piece.isLegalMove(i, j)) {
+                        attackMatrix[i][j] = true;
                     }
                 }
             }
@@ -77,7 +76,7 @@ public class GameLogic {
     private static boolean checkLegalMoveExists(Piece piece){
         for (int i = 0; i < 8; i ++) {
             for (int j = 0; j < 8; j++){
-                if(piece.isLegalMove(i,j) && !GameLogic.willKingBeInCheck(i,j,piece)){
+                if(piece.isLegalMove(i,j) && GameLogic.kingWillBeSafe(i, j, piece)){
                     return true;
                 }
             }
@@ -85,33 +84,31 @@ public class GameLogic {
         return false;
     }
 
-    public static boolean willKingBeInCheck(int target_row, int target_col, Piece movingPiece){
-        boolean result = false;
+    public static boolean kingWillBeSafe(int target_row, int target_col, Piece movingPiece){
+        boolean result = true;
         int initial_row = movingPiece.getRow();
         int initial_col = movingPiece.getCol();
-        Piece potentially_eaten; // save potentially eaten piece to return it later.
+        Piece potentially_eaten; // save potentially eaten piece to put it back after moving simulation.
         potentially_eaten = piecePosition[target_row][target_col];
-
+        pieces.remove(potentially_eaten);
         movingPiece.changePosition(target_row,target_col);
-        if(movingPiece.isWhite()){
-            blackAttacks();
-            if(blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()]){
-               result = true;
-            }
-        } else {
-            whiteAttacks();
-            if(whiteAttacks[King.blackKing.getRow()][King.blackKing.getCol()]){
-                result = true;
-            }
+        updateAttacksAndChecks();
+        if(movingPiece.isWhite() && King.whiteKing.isInCheck() || !movingPiece.isWhite() && King.blackKing.isInCheck()){
+            result = false;
         }
         movingPiece.changePosition(initial_row,initial_col);
         piecePosition[target_row][target_col] = potentially_eaten;
+        if(potentially_eaten != null) {
+            pieces.add(potentially_eaten);
+        }
+        updateAttacksAndChecks();
+        // restore everything
 
         return result;
     }
     public static void checkOrMateOrStale(){
         boolean check = false;
-        if(inCheck()){
+        if(King.whiteKing.isInCheck() || King.blackKing.isInCheck()){
             System.out.println("check! " + ++checkCount );
             check = true;
         }
@@ -125,13 +122,14 @@ public class GameLogic {
 
     }
 
-    public static void updateAttacks(){
-        GameLogic.whiteAttacks();
-        GameLogic.blackAttacks();
+    public static void updateAttacksAndChecks(){
+        whiteAttacks();
+        blackAttacks();
+        updateChecks();
     }
-    public static boolean inCheck(){
-        return blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()]
-                || whiteAttacks[King.blackKing.getRow()][King.blackKing.getCol()] ;
+    public static void updateChecks(){
+        King.whiteKing.setInCheck(blackAttacks[King.whiteKing.getRow()][King.whiteKing.getCol()]);
+        King.blackKing.setInCheck(whiteAttacks[King.blackKing.getRow()][King.blackKing.getCol()]);
     }
 
     public static void eat(Piece eaten){
@@ -143,7 +141,7 @@ public class GameLogic {
         GameLogic.pieces.remove(pawn);
         GameLogic.pieces.add(target_piece);
         GameLogic.piecePosition[pawn.getRow()][pawn.getCol()] = target_piece;
-        GameLogic.updateAttacks();
+        GameLogic.updateAttacksAndChecks();
         GameLogic.checkOrMateOrStale();
     }
 }

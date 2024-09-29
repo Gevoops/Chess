@@ -37,7 +37,7 @@ public abstract class Piece {
         image = piece.image;
     }
     public void move(int target_row , int target_col) {
-        if((this.isWhite == GameLogic.isWhiteTurn) &&isLegalMove(target_row,target_col) && !GameLogic.willKingBeInCheck(target_row,target_col,this) && !Gui.promotionMenuOpen) {
+        if((this.isWhite == GameLogic.isWhiteTurn) && isLegalMove(target_row,target_col) && GameLogic.kingWillBeSafe(target_row, target_col, this) && !Gui.promotionMenuOpen) {
             if(this instanceof  King){
                 if(((King) this).isValidKingSideCastle(target_row,target_col)){
                     ((Rook)GameLogic.piecePosition[target_row][7]).setMovedTrue();
@@ -63,14 +63,11 @@ public abstract class Piece {
             if(this instanceof firstMovable){
                 ((firstMovable) this).setMovedTrue();
             }
-
-            GameLogic.isWhiteTurn = !GameLogic.isWhiteTurn;
-            GameLogic.updateAttacks();
-            GameLogic.checkOrMateOrStale();
-
-
-
-
+            if(!Gui.promotionMenuOpen){
+                GameLogic.isWhiteTurn = !GameLogic.isWhiteTurn;
+                GameLogic.updateAttacksAndChecks();
+                GameLogic.checkOrMateOrStale();
+            }
         } else{
             this.setX(Painter.boardToPixelPos(this.col));
             this.setY(Painter.boardToPixelPos(this.row));

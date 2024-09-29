@@ -8,11 +8,45 @@ import pieces.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-public class Gui {
+public class Gui implements ActionListener {
     public static boolean promotionMenuOpen = false;
-    public static void promotionMenu(int row, int col, Piece piece){
+
+    public JFrame initWindow(){
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Chess");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Get the size of the window (frame)
+        window.setSize(Painter.getTileSize() * 10,Painter.getTileSize() * 10);
+        Dimension windowSize = window.getSize();
+
+
+        int x = (screenSize.width - windowSize.width) / 2;
+        int y = (screenSize.height - windowSize.height) / 2;
+        window.setLocation(x,y);
+        window.setVisible(true);
+        return window;
+    }
+
+    public void addFlipButton(){
+        JButton button = new JButton("flip board");
+        button.setBounds(Main.window.getWidth()/2 + Painter.getOffset() + 40,Painter.getOffset()/5, Painter.getTileSize(),Painter.getTileSize()/2);
+        button.addActionListener(this);
+        Main.panel.add(button);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Painter.flip = 1 - Painter.flip;
+        Main.panel.repaint();
+    }
+    public static void promotionMenu(int row, int col, Piece piece)
+    {
         if(piece.isWhite() && row == 0 || !piece.isWhite() && row ==  7){
             JButton[] button = new JButton[4];
             String[] imagePaths = new String[4];
@@ -45,12 +79,14 @@ public class Gui {
 
                 button[i].addActionListener(e -> {
 
-                    GameLogic.promote(piece,pieceOptions1[finalI]);
+
                     Main.panel.remove(button[0]);
                     Main.panel.remove(button[1]);
                     Main.panel.remove(button[2]);
                     Main.panel.remove(button[3]);
+                    GameLogic.isWhiteTurn = !GameLogic.isWhiteTurn;
                     promotionMenuOpen = false;
+                    GameLogic.promote(piece,pieceOptions1[finalI]);
                     Main.panel.repaint();
                 });
                 Main.panel.add(button[i]);

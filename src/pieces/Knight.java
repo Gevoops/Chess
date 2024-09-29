@@ -9,13 +9,12 @@ public class Knight extends Piece{
         super(row, col, isWhite,image);
     }
 
-
     @Override
     public boolean isLegalMove(int target_row, int target_col) {
-        if(super.isLegalMove(target_row,target_col) &&  Math.abs(target_row - this.getRow()) + Math.abs(target_col - this.getCol()) == 3 && target_row != this.getRow() && target_col != this.getCol()){
-            return GameLogic.piecePosition[target_row][target_col] == null || !GameLogic.piecePosition[target_row][target_col].isWhite() == isWhite();
-        }else {
-            return false;
-        }
+        return super.isLegalMove(target_row,target_col)
+                && Math.abs(target_row - row) + Math.abs(target_col - col) == 3
+                && target_row != row && target_col != col
+                && (GameLogic.piecePosition[target_row][target_col] == null ||
+                GameLogic.piecePosition[target_row][target_col].isWhite != isWhite);
     }
 }

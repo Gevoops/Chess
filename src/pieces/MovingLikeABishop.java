@@ -12,7 +12,7 @@ public interface MovingLikeABishop {
         int col_index = piece.getCol();
         int row_increment = target_row - row_index > 0 ? 1 : -1;
         int col_increment = target_col - col_index > 0 ? 1 : -1;
-        boolean secondEnemyColor = false;
+        boolean secondEnemy = false;
         col_index += col_increment;
         row_index += row_increment;
 
@@ -21,10 +21,10 @@ public interface MovingLikeABishop {
                 if(piece.isWhite() == GameLogic.piecePosition[row_index][col_index].isWhite() || (target_row != row_index)){
                     return false;
                 } else {
-                    if(secondEnemyColor){
+                    if(secondEnemy){
                         return false;
                     } else {
-                        secondEnemyColor = true;
+                        secondEnemy = true;
                     }
                 }
             }
