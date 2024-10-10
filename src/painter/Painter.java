@@ -11,7 +11,7 @@ import java.awt.*;
 
 
 public class Painter extends JPanel {
-    private static final int tileSize = 142;
+    private static final int tileSize = 140;
     public static int flip = 0;
 
     private static final int offset = 128;
@@ -69,8 +69,16 @@ public class Painter extends JPanel {
     public static void drawPieces(Graphics g){
         for(Piece piece : GameLogic.pieces) {
             g.drawImage(piece.getImage(), flippedPixPos(piece.getX()) , flippedPixPos(piece.getY()) ,tileSize,tileSize, Main.panel);
+
         }
 
+    }
+
+    public static void scaleImages(){
+        for(Piece piece : GameLogic.pieces) {
+            Image image = piece.getImage().getScaledInstance(tileSize, tileSize, Image.SCALE_SMOOTH);
+            piece.setImage(image);
+        }
     }
     public static int flippedPixPos(int pixelPos){
         int posInBoard = (pixelPos - offset);

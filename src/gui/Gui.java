@@ -14,11 +14,13 @@ import java.awt.event.ActionListener;
 
 public class Gui implements ActionListener {
     public static boolean promotionMenuOpen = false;
+    private JButton resetButton;
+    private JButton flipButton;
 
     public JFrame initWindow(){
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
+        window.setResizable(true);
         window.setTitle("Chess");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -31,18 +33,32 @@ public class Gui implements ActionListener {
         int y = (screenSize.height - windowSize.height) / 2;
         window.setLocation(x,y);
         window.setVisible(true);
+
         return window;
     }
 
     public void addFlipButton(){
-        JButton button = new JButton("flip board");
-        button.setBounds(Main.window.getWidth()/2 + Painter.getOffset() + 40,Painter.getOffset()/5, Painter.getTileSize(),Painter.getTileSize()/2);
-        button.addActionListener(this);
-        Main.panel.add(button);
+        flipButton = new JButton("flip board");
+        flipButton.setBounds(Main.window.getWidth()/2 + Painter.getOffset() + 40,Painter.getOffset()/5, Painter.getTileSize(),Painter.getTileSize()/2);
+        flipButton.addActionListener(this);
+        Main.panel.add(flipButton);
+    }
+
+    public void addResetButton(){
+        resetButton = new JButton("reset board");
+        resetButton.setBounds(Main.window.getWidth()/2 + Painter.getOffset() + Painter.getTileSize() +  40,Painter.getOffset()/5, Painter.getTileSize(),Painter.getTileSize()/2);
+        resetButton.addActionListener(this);
+        Main.panel.add(resetButton);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        Painter.flip = 1 - Painter.flip;
+        if(e.getSource() == flipButton){
+            Painter.flip = 1 - Painter.flip;
+        } else if (e.getSource() == resetButton){
+            Piece.initPieces();
+            GameLogic.initPosition();
+            GameLogic.isWhiteTurn = true;
+        }
         Main.panel.repaint();
     }
     public static void promotionMenu(int row, int col, Piece piece)
@@ -53,7 +69,7 @@ public class Gui implements ActionListener {
             Piece[] pieceOptions = new Piece[4];
             promotionMenuOpen = true;
             if(piece.isWhite() && row == 0){
-                String[] whiteImagePaths = {"resources/white_queen.png","resources/white_knight.png","resources/white_rook.png","resources/white_bishop.png"};
+                String[] whiteImagePaths = {"resources/wq.png","resources/wn.png","resources/wr.png","resources/wb.png"};
                 imagePaths = whiteImagePaths;
                 pieceOptions = new Piece[]{new Queen(row,col,true, ImageLoader.loadImage(whiteImagePaths[0])),
                         new Knight(row,col,true, ImageLoader.loadImage(whiteImagePaths[1])),
@@ -62,7 +78,7 @@ public class Gui implements ActionListener {
 
 
             } else if (!piece.isWhite() && row == 7) {
-                String[] blackImagePaths = {"resources/black_queen.png","resources/black_knight.png","resources/black_rook.png","resources/black_bishop.png"};
+                String[] blackImagePaths = {"resources/bq.png","resources/bn.png","resources/br.png","resources/bb.png"};
                 imagePaths = blackImagePaths;
                 pieceOptions = new Piece[]{new Queen(row,col,false, ImageLoader.loadImage(blackImagePaths[0])),
                         new Knight(row,col,false, ImageLoader.loadImage(blackImagePaths[1])),

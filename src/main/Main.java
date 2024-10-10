@@ -20,7 +20,7 @@ public class Main {
 
         Gui gui = new Gui();
 
-        GameLogic.pieces = Piece.init_pieces();
+        Piece.initPieces();
         GameLogic.initPosition();
 
         panel = new Painter();
@@ -37,6 +37,7 @@ public class Main {
         panel.addMouseMotionListener(mouse);
 
         gui.addFlipButton();
+        gui.addResetButton();
 
 
 
